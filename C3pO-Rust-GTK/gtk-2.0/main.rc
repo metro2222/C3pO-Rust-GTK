@@ -11,13 +11,13 @@ style "default" {
   GtkToolbar::internal-padding = 4
   GtkToolButton::icon-spacing = 4
 
-  GtkWidget::tooltip-radius = 2
+  GtkWidget::tooltip-radius = 8
   GtkWidget::tooltip-alpha = 235
   GtkWidget::new-tooltip-style = 1 #for compatibility
 
-  GtkSeparatorMenuItem::horizontal-padding = 3
+  GtkSeparatorMenuItem::horizontal-padding = 2
   GtkSeparatorMenuItem::wide-separators = 0
-  GtkSeparatorMenuItem::separator-height = 1
+  GtkSeparatorMenuItem::separator-height = 0
 
   GtkButton::child-displacement-y = 0
   GtkButton::default-border = { 0, 0, 0, 0 }
@@ -687,24 +687,38 @@ style "menu" {
   bg[NORMAL] = @menu_bg
   bg[INSENSITIVE] = @menu_bg
   bg[PRELIGHT] = @menu_bg
-}
 
-style "menu_framed_box" {
-  engine "pixmap" {
+  engine "pixmap" { # For menus that use horizontal lines rather than gtkseparator
 
     image {
-      function = BOX
-      file = "assets/menu.png"
-      border = { 1, 1, 1, 1 }
+      function = HLINE
+      file = "assets/null.png"
+      border = { 0, 0, 0, 0 }
       stretch = TRUE
     }
   }
 }
 
+style "menu_framed_box" {
+
+#  engine "adwaita" { # default menu border
+#  }
+
+  engine "pixmap" {
+    image {
+      function = BOX
+      file     = "assets/frame.png"
+      border   = { 1, 1, 1, 1 }
+      stretch  = TRUE
+    }
+  }
+
+}
+
 style "menu_item"
 {
   xthickness = 2
-  ythickness = 5
+  ythickness = 3
 
   # HACK: Gtk doesn't actually read this value
   # while rendering the menu items, but Libreoffice
@@ -716,7 +730,7 @@ style "menu_item"
   # See https://bugs.freedesktop.org/show_bug.cgi?id=38038
   bg[SELECTED] = @selected_fg_color
 
-  fg[NORMAL] = @fg_color
+  fg[NORMAL] = @menu_fg
   fg[SELECTED] = @selected_fg_color
 
   fg[PRELIGHT] = @selected_fg_color
@@ -925,8 +939,8 @@ style "menu_item"
 
 style "button" {
 
-  xthickness = 4
-  ythickness = 4
+  xthickness = 2
+  ythickness = 2
 
   engine "pixmap" {
 
@@ -934,23 +948,34 @@ style "button" {
       function = BOX
       state = NORMAL
       file = "assets/button.png"
-      border = { 5, 5, 5, 5 }
+      border = { 4, 4, 4, 4 }
       stretch = TRUE
     }
 
     image {
       function = BOX
       state = PRELIGHT
+      shadow = OUT
       file = "assets/button-hover.png"
-      border = { 5, 5, 5, 5 }
+      border = { 4, 4, 4, 4 }
       stretch = TRUE
+    }
+
+    # Don't add hover effect on pressed buttons
+    image {
+      function = BOX
+      state    = PRELIGHT
+      shadow   = IN
+      file     = "assets/button-active.png"
+      border   = {4, 4, 4, 4}
+      stretch  = TRUE
     }
 
     image {
       function = BOX
       state = ACTIVE
       file = "assets/button-active.png"
-      border = { 5, 5, 5, 5 }
+      border = { 4, 4, 4, 4 }
       stretch = TRUE
     }
 
@@ -958,7 +983,7 @@ style "button" {
       function = BOX
       state = INSENSITIVE
       file = "assets/button-insensitive.png"
-      border = { 5, 5, 5, 5 }
+      border = { 4, 4, 4, 4 }
       stretch = TRUE
     }
   }
@@ -973,8 +998,8 @@ style "checkbutton" {
 
 style "entry" {
 
-  xthickness = 5
-  ythickness = 5
+  xthickness = 6
+  ythickness = 4
 
   engine "pixmap" {
 
@@ -983,7 +1008,7 @@ style "entry" {
       state = NORMAL
       detail = "entry"
       file = "assets/entry-bg.png"
-      border = {5, 5, 5, 5}
+      border = {6, 6, 6, 6}
       stretch = TRUE
     }
 
@@ -992,7 +1017,7 @@ style "entry" {
       state = ACTIVE
       detail = "entry"
       file = "assets/entry-active-bg.png"
-      border = {5, 5, 5, 5}
+      border = {6, 6, 6, 6}
       stretch = TRUE
     }
 
@@ -1001,7 +1026,7 @@ style "entry" {
       state = INSENSITIVE
       detail = "entry"
       file = "assets/entry-disabled-bg.png"
-      border = {5, 5, 5, 5}
+      border = {6, 6, 6, 6}
       stretch = TRUE
     }
 
@@ -1036,7 +1061,7 @@ style "notebook_entry" {
       state = NORMAL
       detail = "entry"
       file = "assets/entry-notebook.png"
-      border = {5, 5, 5, 5}
+      border = {6, 6, 6, 6}
       stretch = TRUE
     }
 
@@ -1045,7 +1070,7 @@ style "notebook_entry" {
       state = ACTIVE
       detail = "entry"
       file = "assets/entry-active-notebook.png"
-      border = {5, 5, 5, 5}
+      border = {6, 6, 6, 6}
       stretch = TRUE
     }
 
@@ -1054,7 +1079,7 @@ style "notebook_entry" {
       state = INSENSITIVE
       detail = "entry"
       file = "assets/entry-disabled-notebook.png"
-      border = {5, 5, 5, 5}
+      border = {6, 6, 6, 6}
       stretch = TRUE
     }
   }
@@ -1783,7 +1808,7 @@ style "range" {
       function = BOX
       detail = "trough-upper"
       file = "assets/trough-horizontal.png"
-      border = { 10, 10, 0, 0 }
+      border = { 8, 8, 0, 0 }
       stretch = TRUE
       orientation = HORIZONTAL
     }
@@ -1792,7 +1817,7 @@ style "range" {
       function = BOX
       detail = "trough-lower"
       file = "assets/trough-horizontal-active.png"
-      border = { 10, 10, 0, 0 }
+      border = { 8, 8, 0, 0 }
       stretch = TRUE
       orientation = HORIZONTAL
     }
@@ -1801,7 +1826,7 @@ style "range" {
       function = BOX
       detail = "trough-upper"
       file = "assets/trough-vertical.png"
-      border = { 0, 0, 10, 10 }
+      border = { 0, 0, 8, 8 }
       stretch = TRUE
       orientation = VERTICAL
     }
@@ -1810,7 +1835,7 @@ style "range" {
       function = BOX
       detail = "trough-lower"
       file = "assets/trough-vertical-active.png"
-      border = { 0, 0, 10, 10 }
+      border = { 0, 0, 8, 8 }
       stretch = TRUE
       orientation = VERTICAL
     }
@@ -1982,7 +2007,7 @@ style "treeview" {
   ythickness = 0
 
 
-}    
+}
 
 style "scrolled_window" {
 
@@ -2210,7 +2235,7 @@ style "xfwm-tabwin" {
   Xfwm4TabwinWidget::border-alpha = 1.0
   Xfwm4TabwinWidget::icon-size = 64
   Xfwm4TabwinWidget::alpha = 1.0
-  Xfwm4TabwinWidget::border-radius = 2
+  Xfwm4TabwinWidget::border-radius = 8
 
 	bg[NORMAL] = @bg_color
 	bg[SELECTED] = @bg_color
@@ -2232,6 +2257,45 @@ style "xfwm-tabwin-button" {
   font_name = "bold"
   bg[SELECTED] = @selected_bg_color
 }
+
+# Thunar
+
+style "thunar_location_button" = "location_button" {
+  ThunarLocationButtons::spacing = 0
+
+  engine "pixmap" {
+    image {
+      function = BOX
+      state    = NORMAL
+      file     = "assets/null.png"
+      border   = { 2, 2, 2, 2 }
+      stretch  = TRUE
+    }
+    image {
+      function = BOX
+      state    = PRELIGHT
+      file     = "assets/pathbar_button_prelight.png"
+      border   = { 2, 2, 2, 2 }
+      stretch  = TRUE
+    }
+    image {
+      function = BOX
+      state    = ACTIVE
+      file     = "assets/pathbar_button_active.png"
+      border   = { 0, 0, 0, 2 }
+      stretch  = TRUE
+    }
+    image {
+      function = BOX
+      state    = INSENSITIVE
+      file     = "assets/null.png"
+      border   = { 2, 2, 2, 2 }
+      stretch  = TRUE
+    }
+  }
+}
+
+widget_class "*ThunarLocationButtons*" style "thunar_location_button"
 
 # Chromium
 style "chrome_menu_item" {
